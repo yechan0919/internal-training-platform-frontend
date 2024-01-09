@@ -6,6 +6,7 @@ export interface VideoItem {
         title: string;
         description: string;
         channelTitle: string;
+        publishedAt: Date;
         thumbnails: {
             default: {
                 url: string;

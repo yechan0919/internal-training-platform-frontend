@@ -11,40 +11,36 @@ const VideoList:React.FC<VideoListProps> = ({category}) => {
 
     useEffect(() => {
         YoutubeClient
-            .search(category, 3) //
+            .search(category, 2) //
             .then((videos: VideoItem[]) => setVideos(videos));
     }, [category]);
 
     return (
-        <section className="mb-8">
+        <div className={"mb-4"}>
             <h2 className="text-2xl font-bold mb-4">{category}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ul role="list" className="divide-y divide-gray-100">
                 {videos.map((video) => (
-                    <div>
-                        <Link to={`https://www.youtube.com/embed/${video.id}`}>
-                            <img
-                                alt="Thumbnail"
-                                className="w-full h-64 object-cover object-center rounded-lg"
-                                height="400"
-                                src={video.snippet.thumbnails.default.url}
-                                style={{
-                                    aspectRatio: "600/400",
-                                    objectFit: "cover",
-                                }}
-                                width="600"
-                            />
-                        </Link>
-                        <h3 className="text-xl font-bold mb-2 mt-4">{video.snippet.title}</h3>
-                        <p className="text-zinc-500 dark:text-zinc-400 break-all">
-                            {video.snippet.description}
-                        </p>
-                        <Link className="text-blue-500 hover:text-blue-700 mt-4" to={`https://www.youtube.com/embed/${video.id}`}>
-                            Learn More
-                        </Link>
-                    </div>
+                    <li key={video.id} className="flex justify-between gap-x-6 py-5">
+                        <div className="flex min-w-0 gap-x-4">
+                            <img className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                                 src={video.snippet.thumbnails.default.url} alt=""/>
+                            <div className="min-w-0 flex-auto">
+                                <Link to={`https://www.youtube.com/embed/${video.id}`}>
+                                    <p className="text-sm font-semibold leading-6 text-gray-900">{video.snippet.title}</p>
+                                </Link>
+                                <p className="mt-1 truncate text-xs leading-5 text-gray-500">{video.snippet.description}</p>
+                            </div>
+                        </div>
+                        <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                            <p className="text-sm leading-6 text-gray-900">{video.snippet.channelTitle}</p>
+                            <p className="mt-1 text-xs leading-5 text-gray-500">
+                                Published At: {video.snippet.publishedAt.toLocaleString().split("T")[0]}
+                            </p>
+                        </div>
+                    </li>
                 ))}
-            </div>
-        </section>
+            </ul>
+        </div>
     );
 };
 
