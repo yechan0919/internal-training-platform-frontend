@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Header from "./components/Header";
 import VoiceChat from "./components/VoiceChat";
 import VideoDetail from "./components/VideoDetail";
+import MyPage from "./components/MyPage";
 
 
 
@@ -18,6 +19,7 @@ function App() {
             <Route path={"/video"} element={<VideoMenu />}/>
             <Route path={"/video/:videoId"} element={<VideoDetail />}/>
             <Route path={"/voice-chat"} element={<VoiceChat />}/>
+            <Route path={"/user/:userId"} element={<MyPage />}/>
         </Routes>
     </>
   );
