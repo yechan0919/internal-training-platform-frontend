@@ -27,17 +27,17 @@ const VoiceChat = () => {
           const response = await axios.post(apiUrl, {
             message: transcript
           });
-    
+
           // API 응답 결과를 state에 저장
           setApiResponse(response.data.result);
-    
+
           // 대화 기록 업데이트
           setChatHistory(prevHistory => [
             ...prevHistory,
             { type: 'user', message: transcript},
             { type: 'bot', message: response.data.result }
           ]);
-    
+
           // 입력 필드 초기화
           setUserMessage('');
         } catch (error) {
@@ -49,16 +49,16 @@ const VoiceChat = () => {
         resetTranscript(); // resetTranscript 호출
         callFlaskAPI();    // callFlaskAPI 호출
       };
-    
+
     if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
     }
 
 
     return (
-        <div className={"pt-8"}>
-            <div className=" flex-1 p:2 sm:p-6  justify-between flex flex-col h-screen">
-                <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
+        <div className={"w-full"}>
+            <div className=" flex-1 justify-between flex flex-col h-[89vh] container mx-auto px-4 md:px-6">
+                <div className="flex sm:items-center justify-between border-b-2 border-gray-200">
                     <div className="relative flex items-center space-x-4">
                         <div className="relative">
                             <span className="absolute text-green-500 right-0 bottom-0">

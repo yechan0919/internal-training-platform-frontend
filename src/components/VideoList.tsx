@@ -19,7 +19,7 @@ const VideoList:React.FC<VideoListProps> = ({category}) => {
                             <img className="h-12 w-12 flex-none rounded-full bg-gray-50"
                                  src={lecture.thumbnail_url} alt=""/>
                             <div className="min-w-0 flex-auto">
-                                <Link to={lecture.video_link}>
+                                <Link to={`/video/${lecture.lecture_id}`} state={lecture}>
                                     <p className="text-sm font-semibold leading-6 text-gray-900">{lecture.title}</p>
                                 </Link>
                                 <p className="mt-1 truncate text-xs leading-5 text-gray-500">{lecture.description}</p>
