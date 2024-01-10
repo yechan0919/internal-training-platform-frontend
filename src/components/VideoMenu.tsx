@@ -1,9 +1,7 @@
 import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import VideoList from "./VideoList";
-import useAllLectureByLike from "../hooks/useAllLecturesOrderbyLike";
 import Carousel from "react-material-ui-carousel";
-import useLectureByLectureOrderbyLike from "../hooks/useLectureByLectureOrderbyLike";
 import UseLectureByLectureOrderbyLike from "../hooks/useLectureByLectureOrderbyLike";
 
 interface VideoMenuProps {
@@ -18,13 +16,11 @@ const categories = [
 ]
 
 const VideoMenu:React.FC<VideoMenuProps> = () => {
-    // const {data: lectures = []} = useAllLectureByLike()
-
     return (
         <section className="w-full">
             <main className="container mx-auto px-4 md:px-6 py-2">
                 <section className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4">추천 영상</h2>
+                    <h2 className="text-3xl font-bold mb-4">추천 영상</h2>
                     <div className="grid grid-cols-1">
                         <Carousel cycleNavigation={true} navButtonsAlwaysVisible={true}>
                             {categories.map(category => {
@@ -49,7 +45,9 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center w-1/2">
                                                     <h3 className="text-2xl font-bold mb-2">{category}</h3>
-                                                    <h3 className="text-xl font-bold mb-2">{lectures[0].title}</h3>
+                                                    <Link className="text-xl font-bold mb-2" to={`/video/${lectures[0].lecture_id}`} state={lectures[0]}>
+                                                        {lectures[0].title}
+                                                    </Link>
                                                     <p className="text-zinc-500 dark:text-zinc-400">
                                                         {lectures[0].description}
                                                     </p>

@@ -47,7 +47,7 @@ const VideoDetail = () => {
                 </div>
             </div>
             <div className="container mx-auto px-4 md:px-6 py-8 flex border-b border-gray-800">
-                <p className={"font-bold text-2xl"}>VIEW</p>
+                <p className={"font-bold text-2xl"}>COMMENT</p>
             </div>
         </>
 
