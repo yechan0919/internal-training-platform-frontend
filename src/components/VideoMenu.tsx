@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 import VideoList from "./VideoList";
-import YoutubeClient, {VideoItem} from "../service/youtube";
+import useAllLectureByLike from "../hooks/useAllLecturesByLike";
 
 interface VideoMenuProps {
 }
@@ -15,13 +15,7 @@ const categories = [
 ]
 
 const VideoMenu:React.FC<VideoMenuProps> = () => {
-    const [videos, setVideos] = useState<VideoItem[]>([]);
-
-    useEffect(() => {
-        YoutubeClient
-            .mostPopular(1) //
-            .then((videos) => setVideos(videos));
-    }, []);
+    const {data: lectures = []} = useAllLectureByLike()
 
     return (
         <div className={"pt-14"}>
@@ -30,15 +24,15 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                     <section className="mb-8">
                         <h2 className="text-2xl font-bold mb-4">추천 영상</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {videos.map((video) => (
+                            {lectures.length > 0 && (
                                 <>
                                     <div>
-                                        <Link to={`https://www.youtube.com/embed/${video.id}`}>
+                                        <Link to={lectures[0].video_link}>
                                             <img
                                                 alt="Thumbnail"
                                                 className="w-full h-64 object-cover object-center rounded-lg"
                                                 height="400"
-                                                src={video.snippet.thumbnails.default.url}
+                                                src={lectures[0].thumbnail_url}
                                                 style={{
                                                     aspectRatio: "600/400",
                                                     objectFit: "cover",
@@ -48,17 +42,17 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                                         </Link>
                                     </div>
                                     <div className="flex flex-col justify-center">
-                                        <h3 className="text-xl font-bold mb-2">{video.snippet.title}</h3>
+                                        <h3 className="text-xl font-bold mb-2">{lectures[0].title}</h3>
                                         <p className="text-zinc-500 dark:text-zinc-400">
-                                            {video.snippet.description}
+                                            {lectures[0].description}
                                         </p>
                                         <Link className="text-blue-500 hover:text-blue-700 mt-4"
-                                              to={`https://www.youtube.com/embed/${video.id}`}>
+                                              to={lectures[0].video_link}>
                                             Learn More
                                         </Link>
                                     </div>
                                 </>
-                            ))}
+                            )}
                         </div>
                     </section>
                     {categories.map((category) => (

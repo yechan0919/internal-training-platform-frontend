@@ -1,7 +1,5 @@
 import React from 'react';
 import './App.css';
-import axios from "axios";
-import Youtube from './service/youtube';
 import VideoMenu from "./components/VideoMenu";
 import {Route, Routes} from "react-router-dom";
 import Home from "./components/Home";
