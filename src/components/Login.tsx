@@ -9,8 +9,6 @@ function Login(props: LoginProps) {
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
 
-
-
     async function login(event: FormEvent) {
         event.preventDefault();
         try {
