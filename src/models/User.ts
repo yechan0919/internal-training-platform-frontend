@@ -4,4 +4,5 @@ export default interface User {
     quiz_lv: number
     userId: string
     username: string
+    user_name: string
 }

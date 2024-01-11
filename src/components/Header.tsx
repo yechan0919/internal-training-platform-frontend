@@ -4,6 +4,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import poscoIcon from '../assets/icon/POSCO.png'
 import {NavLink} from "react-router-dom";
 import { fetchUser } from '../api/UserAPI';
+import { fetchPoint } from '../api/PointAPI';
+
 import User from "../models/User";
 
 const navigation = [
@@ -17,7 +19,11 @@ export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     // TODO store에 user 저장
     const [user, setUser] = useState<User>();
+
+    const [points, setPoints] = useState<any>(null); // State to store user points
+
     const ACCESS_TOKEN = localStorage.getItem('accessToken');
+
 
     const handleLogout = async () => {
         localStorage.clear();
@@ -29,6 +35,11 @@ export default function Header() {
                 .then((response) => {
                     // console.log(response.userId);
                     setUser(response);
+
+                    fetchPoint(response.userId)
+                        .then((pointResponse) => {
+                            setPoints(pointResponse);
+                        })
                 }).catch((error) => {
                 console.log(error);
             });
@@ -66,24 +77,43 @@ export default function Header() {
                             </NavLink>
                         ))}
                     </div>
-                    <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        {ACCESS_TOKEN
-                            ?
+
+                    <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+                        {ACCESS_TOKEN ? (
                             <>
-                                {user?.username} | {user?.quiz_lv}.Lv
+                                <span className="text-sm font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500">
+                                    {user?.username} | Lv.{user?.quiz_lv}
+                                </span>
+
+                                <select
+                                    onChange={(e) => {
+                                        const selectedOption = e.target.value;
+                                        if (selectedOption === 'myLecture') {
+                                            window.location.href = '/';
+                                        }
+                                        //TODO MyPage.tsx 보내기
+
+                                    }}
+                                    className="text-sm font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500"
+                                >
+                                    <option value=""> {user?.username} | Lv.{user?.quiz_lv}</option>
+                                    <option value="myLecture">My Lecture</option>
+                                    {/* Add more options as needed */}
+                                </select>
+
+
+
                                 <a href="/" onClick={handleLogout} className="text-sm font-semibold leading-6 text-gray-900">
                                     Log out <span aria-hidden="true">&rarr;</span>
                                 </a>
                             </>
-
-                            :
-                            <>
-                                <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-                                    Log in <span aria-hidden="true">&rarr;</span>
-                                </a>
-                            </>
-                        }
+                        ) : (
+                            <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
+                                Log in <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        )}
                     </div>
+
                 </nav>
                 <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
                     <div className="fixed inset-0 z-50" />
