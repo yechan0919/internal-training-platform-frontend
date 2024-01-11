@@ -7,6 +7,8 @@ const Quiz: React.FC = () => {
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
+    console.log(JSON.stringify(pointData, null, 2));
+
     // OX 버튼 클릭 
     const selectOX = (value: string) => {
         setSelectedValue(value);
@@ -28,7 +30,7 @@ const Quiz: React.FC = () => {
     const checkAnswer = (selectedValue: string, topic: string) => {
         if (selectedValue === `${quizData.answer}`) {
             selectOX('정답'); // 확인용
-            callPointUpApi("mangmang", `${quizData.topic}`); // 포인트 증가 ######## 로그인 구현하면 userId 수정하기 #######
+            callPointUpApi("kny1774", `${quizData.topic}`); // 포인트 증가 ######## 로그인 구현하면 userId 수정하기 #######
             selectTopic(`${quizData.topic}`);
             if (pointData && pointData.is_lvup === 1) {
                 alert(`정답입니다!\n축하합니다! 레벨${pointData.user_lv === 1 ? '2로' : '3으로'} 상승하였습니다!`)
