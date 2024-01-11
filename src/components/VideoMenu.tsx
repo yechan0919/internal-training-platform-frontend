@@ -1,8 +1,8 @@
 import React from 'react';
-import VideoList from "./VideoList";
 import Carousel from "react-material-ui-carousel";
 import {categories} from "../constants/Category";
 import RecommendationLecture from "./RecommendationLecture";
+import CategoryVideoList from "./CategoryVideoList";
 
 interface VideoMenuProps {
 }
@@ -22,7 +22,7 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                     </div>
                 </section>
                 {categories.map((category) => (
-                    <VideoList category={category}/>
+                    <CategoryVideoList category={category}/>
                 ))}
             </main>
         </section>
