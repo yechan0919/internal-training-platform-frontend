@@ -152,6 +152,7 @@ const Quiz: React.FC = () => {
                         <div>
                             {quizData && (
                                 <p className="font-bold mt-10 mb-7 text-gray-900 sm:text-4xl">
+                                    <span className="block font-bold mb-4 text-2xl border border-gray-400 border-solid border-3 p-1">{quizData.topic}</span>
                                     {quizData.question}
                                 </p>
                             )}
