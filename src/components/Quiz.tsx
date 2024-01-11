@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 // import axios from 'axios';
 
 const Quiz: React.FC = () => {
     const [quizData, setQuizData] = useState<any>(null);
     const [pointData, setPointData] = useState<any>(null);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
+    const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
     // OX 버튼 클릭 
     const selectOX = (value: string) => {
@@ -15,9 +14,15 @@ const Quiz: React.FC = () => {
 
     // 토픽 버튼 클릭
     const selectTopic = (topic: string) => {
-        // selectOX('');
         callQuizApi(topic);
+        setSelectedTopic(topic);
     };
+
+    // 토픽 버튼 스타일 
+    const buttonStyle = {
+        base: 'rounded-md bg-indigo-400 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
+        selected: 'rounded-md bg-indigo-900 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm',
+      };
 
     // 정답 확인 버튼 클릭 
     const checkAnswer = (selectedValue: string, topic: string) => {
@@ -125,33 +130,32 @@ const Quiz: React.FC = () => {
                             </p>
                             <div className="mt-5 mb-7 flex items-center justify-center gap-x-6">
                                 <button
-                                    
-                                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => selectTopic("언어")}
+                                    className={selectedTopic === '언어' ? buttonStyle.selected : buttonStyle.base}
+                                    onClick={() => selectTopic('언어')}
                                 >
                                     언어
                                 </button>
                                 <button
-                                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => selectTopic("생산기술")}
+                                    className={selectedTopic === '생산기술' ? buttonStyle.selected : buttonStyle.base}
+                                    onClick={() => selectTopic('생산기술')}
                                 >
                                     생산기술
                                 </button>
                                 <button
-                                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => selectTopic("재무")}
+                                    className={selectedTopic === '재무' ? buttonStyle.selected : buttonStyle.base}
+                                    onClick={() => selectTopic('재무')}
                                 >
                                     재무
                                 </button>
                                 <button
-                                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => selectTopic("마케팅")}
+                                    className={selectedTopic === '마케팅' ? buttonStyle.selected : buttonStyle.base}
+                                    onClick={() => selectTopic('마케팅')}
                                 >
                                     마케팅
                                 </button>
                                 <button
-                                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    onClick={() => selectTopic("IT")}
+                                    className={selectedTopic === 'IT' ? buttonStyle.selected : buttonStyle.base}
+                                    onClick={() => selectTopic('IT')}
                                 >
                                     IT
                                 </button>
@@ -159,7 +163,6 @@ const Quiz: React.FC = () => {
                             <div>
                                 {quizData && (
                                     <p className="font-bold mt-10 mb-7 text-gray-900 sm:text-4xl">
-                                        <span className="block font-bold mb-4 text-2xl border border-gray-400 border-solid border-3 p-1">{quizData.topic}</span>
                                         {quizData.question}
                                     </p>
                                 )}
@@ -186,19 +189,13 @@ const Quiz: React.FC = () => {
                                 <div>
                                     {quizData && (
                                         <button 
-                                            className="rounded-md bg-indigo-300 px-3.5 py-3.5 mt-5 text-base font-bold text-black shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                                            className="rounded-md bg-indigo-400 px-3.5 py-3.5 mt-5 text-base font-bold text-white hover:bg-indigo-500 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                             onClick={() => checkAnswer(`${selectedValue}`, `${quizData.topic}`)}>
                                             정답 확인
                                         </button>
                                     )}
                                 </div>
 
-                                {/* 확인용. 나중에 지울 것. */}
-                                {/* {pointData ? (
-                                    <pre>{JSON.stringify(pointData, null, 2)}</pre>
-                                ) : (
-                                    <p>Loading data...</p>
-                                )} */}
                             </div>
                         </div>
                     </div>
