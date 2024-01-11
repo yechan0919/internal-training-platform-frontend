@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import {useStore} from "../store/store";
 
 interface RegisterProps {}
 
@@ -10,12 +11,25 @@ function Register(props: RegisterProps) {
     const [password, setPassword] = useState<string>("");
     const [department, setDepartment] = useState<string>("");
 
-    // Get the navigate function
+    const [loading, setLoading] = useState(false);
+    const setUsernameInStore = useStore((state) => state.setUsername);
+
     const navigate = useNavigate();
 
     async function save(event: FormEvent) {
         event.preventDefault();
+
+        if (!userId || !username || !password || !department) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        setLoading(true);
+        console.log("Loading state set to true");
+
+
         try {
+            // Make API request
             await axios.post("http://localhost:8088/user/save", {
                 userId: userId,
                 username: username,
@@ -23,12 +37,16 @@ function Register(props: RegisterProps) {
                 department: department,
             });
 
-            alert("User Registration Successfully");
 
-            // Redirect to the login page
+            alert("회원가입 성공");
+
             navigate("/login");
+
         } catch (err) {
             alert(err);
+        } finally {
+            setLoading(false);
+            console.log("Loading state set to false");
         }
     }
 
@@ -39,7 +57,7 @@ function Register(props: RegisterProps) {
                 <div className="card">
                     <h1 className="text-3xl font-bold mb-4">Worker Registration</h1>
 
-                    <form>
+                    <form onSubmit={save}>
                         <div className="mb-4">
                             <label htmlFor="username" className="block text-sm font-semibold text-gray-600">
                                 User name
@@ -106,10 +124,10 @@ function Register(props: RegisterProps) {
 
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                            onClick={save}
+                            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={loading}
                         >
-                            Save
+                            {loading ? "Now Saving..." : "Save"}
                         </button>
                     </form>
                 </div>

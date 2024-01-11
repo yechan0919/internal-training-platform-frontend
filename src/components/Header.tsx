@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import poscoIcon from '../assets/icon/POSCO.png'
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+import {useStore} from "../store/store";
+import {useAuthStore} from "../store/auth";
 
 const navigation = [
     { name: 'Home', href: '/' },
@@ -13,6 +15,22 @@ const navigation = [
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const username = useStore((state) => state.username);
+
+    const { isLoggedIn, logout } = useAuthStore();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        if (window.confirm('로그아웃 하시겠습니까?')) {
+            alert('로그아웃 되었습니다.');
+            logout();
+            navigate('/login');
+            window.location.reload();
+        } else {
+            alert('취소합니다.');
+        }
+    };
+
 
     return (
             <header className="sticky inset-x-0 top-0 z-50 bg-white">
@@ -48,11 +66,30 @@ export default function Header() {
                             // </a>
                         ))}
                     </div>
+
+
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-                            Log in <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        {username ? (
+                            // If username exists, display the username
+                            <div className="flex items-center space-x-4">
+                             <span className="text-sm font-semibold leading-6 text-gray-900">
+                                {username}
+                             </span>
+                                <button onClick={handleLogout}
+                                        className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
+                                >
+                                    Log out
+                                </button>
+                            </div>
+                        ) : (
+                            // If username does not exist, display the login link
+                            <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
+                                Log in <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        )}
                     </div>
+
+
                 </nav>
                 <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
                     <div className="fixed inset-0 z-50" />

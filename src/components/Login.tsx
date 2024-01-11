@@ -8,6 +8,7 @@ interface LoginProps {}
 function Login(props: LoginProps) {
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const setAccessToken = useStore((state) => state.setAccessToken);
@@ -15,6 +16,7 @@ function Login(props: LoginProps) {
 
     async function login(event: FormEvent) {
         event.preventDefault();
+        setLoading(true);
         try {
             console.log("User ID:", userId);
             console.log("Password:", password);
@@ -22,27 +24,36 @@ function Login(props: LoginProps) {
             const response = await axios.post("http://localhost:8088/user/login", {
                 loginId: userId,
                 password: password,
+            }, {
+                headers: {
+                    // Set the Authorization header here
+                    //Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    Authorization: `Bearer ${useStore.getState().accessToken}`,
+                },
             });
 
             console.log("Response Data:", response.data);
             console.log("Request Config:", response.config);
 
+            // Token 값 Body에서 뜯어서 확인 완료
             const accessToken = response.data.tokenDto.accessToken;
-            console.log("accessToken:", accessToken)
-
+            console.log("accessToken:", accessToken);
 
             // 토큰 저장 Local
             localStorage.setItem("accessToken", accessToken);
             console.log("localStorage accessToken:", localStorage.getItem("accessToken"));
 
-
-            // Token save Zustand
+            // 토큰 저장 Zustand
             setAccessToken(accessToken);
             console.log("Zustand useStore accessToken:", useStore.getState().accessToken);
+
 
             navigate('/');
         } catch (err) {
             alert(err);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -50,7 +61,7 @@ function Login(props: LoginProps) {
         <div className="container mx-auto mt-10">
             <div className="w-full max-w-md mx-auto">
                 <h2 className="text-3xl font-bold mb-4">Login</h2>
-                <form>
+                <form onSubmit={login}>
                     <div className="mb-4">
                         <label htmlFor="userId" className="block text-sm font-semibold text-gray-600">User ID</label>
                         <input
@@ -81,10 +92,10 @@ function Login(props: LoginProps) {
 
                     <button
                         type="submit"
-                        className="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                        onClick={login}
+                        className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? "Logging in" : "Login"}
                     </button>
                 </form>
 
