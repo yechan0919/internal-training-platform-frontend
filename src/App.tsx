@@ -6,6 +6,9 @@ import Home from "./components/Home";
 import Header from "./components/Header";
 import VoiceChat from "./components/VoiceChat";
 import VideoDetail from "./components/VideoDetail";
+import Login from "./components/Login";
+import Register from "./components/Register";
+
 import Quiz from "./components/Quiz";
 import MyPage from "./components/MyPage";
 
@@ -21,6 +24,8 @@ function App() {
             <Route path={"/voice-chat"} element={<VoiceChat />}/>
             <Route path={"/quiz"} element={<Quiz />}/>
             <Route path={"/user/:userId"} element={<MyPage />}/>
+            <Route path={"/register"} element= { <Register/>} />
+            <Route path={"/login"} element= { <Login/>} />
         </Routes>
     </>
   );
