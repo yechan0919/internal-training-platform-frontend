@@ -9,6 +9,8 @@ function Login(props: LoginProps) {
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
 
+
+
     async function login(event: FormEvent) {
         event.preventDefault();
         try {
@@ -26,6 +28,12 @@ function Login(props: LoginProps) {
             const authorizationHeader = response.headers['authorization'];
             console.log(authorizationHeader);
             console.log("===================");
+
+            const accessToken = response.data.tokenDto.accessToken;
+            console.log("accessToken:", accessToken)
+
+            localStorage.setItem("accessToken", accessToken);
+
 
         } catch (err) {
             alert(err);
