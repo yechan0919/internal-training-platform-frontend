@@ -1,5 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import request from "../api/axiosAPI"
 import axios from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 interface LoginProps {}
 
@@ -12,19 +15,25 @@ function Login(props: LoginProps) {
         event.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:8088/user/login", {
-                loginId: userId,
-                password: password,
-            }).then((res) => {
-                const accessToken = res.data.tokenDto.accessToken;
-                localStorage.setItem('accessToken', accessToken);
-                if (res.status === 200) {
-                    window.location.href = '/';
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            const apiEndpoint = `/user/login`;
+
+            request
+                .post(`${apiEndpoint}`,{
+                    loginId: userId,
+                    password: password,
+                })
+                .then((res) => {
+                    console.log(res.data)
+
+                    const accessToken = res.data.tokenDto.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    if (res.status === 200) {
+                        window.location.href = '/';
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
         } catch (err) {
             alert(err);
         }

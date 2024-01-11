@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import {useStore} from "../store/store";
+import request from "../api/axiosAPI";
 
 interface RegisterProps {}
 
@@ -12,7 +12,6 @@ function Register(props: RegisterProps) {
     const [department, setDepartment] = useState<string>("");
 
     const [loading, setLoading] = useState(false);
-    const setUsernameInStore = useStore((state) => state.setUsername);
 
     const navigate = useNavigate();
 
@@ -30,17 +29,19 @@ function Register(props: RegisterProps) {
 
         try {
             // Make API request
-            await axios.post("http://localhost:8088/user/save", {
+            request.post('/user/save', {
                 userId: userId,
                 username: username,
                 password: password,
                 department: department,
+            }).then((res) => {
+                if (res.status === 200) {
+                    alert("회원가입 성공");
+                } else {
+                    alert("error : "+ res.status);
+                }
+                navigate('/login');
             });
-
-
-            alert("회원가입 성공");
-
-            navigate("/login");
 
         } catch (err) {
             alert(err);

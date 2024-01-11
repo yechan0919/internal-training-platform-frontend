@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import request from "../api/axiosAPI";
 
 const Quiz: React.FC = () => {
     const [quizData, setQuizData] = useState<any>(null);
@@ -70,28 +71,23 @@ const Quiz: React.FC = () => {
           // API 엔드포인트 및 IP 주소
           const apiEndpoint = `/quiz/${category}/topic-random-quiz`;
 
-          // REST API 호출
-          const response = await fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`,{
-              method: 'GET', // GET 요청 사용
-              headers: {
-                  'Content-Type': 'application/json',
-                  Authorization : `Bearer ${localStorage.getItem('accessToken')}`, // JWT 토큰 추가
-              }
-          });
-
-          // 응답 확인
-          if (response.ok) {
-            // 성공적으로 받아온 경우
-            const data = await response.json();
-            setQuizData(data);
-          } else {
-            // 오류가 발생한 경우
-            console.error(`API 호출 중 오류 발생: ${response.status}`);
-           window.location.href = '/';
-          }
+          request.get(`${apiEndpoint}`)
+              .then((res) => {
+                  if (res.status === 200) {
+                      setQuizData(res.data);
+                  } else {
+                      // 오류가 발생한 경우
+                      if (res.status === 403) {
+                          alert('접근 권한이 없습니다.');
+                      } else {
+                          console.error(`API 호출 중 오류 발생: ${res.status}`);
+                      }
+                      window.location.href = '/';
+                  }
+              })
         } catch (error) {
           console.error('API 호출 중 에러:', error);
-          window.location.href = '/';
+          // window.location.href = '/';
         }
     };
 
