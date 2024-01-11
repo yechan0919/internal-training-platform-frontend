@@ -12,7 +12,7 @@ const RecommendationLecture:React.FC<CategoryLectureProps> = ({ category }) => {
         <>
             {lectures.length > 0 && (
                 <div className={"flex justify-center mx-20"}>
-                    <div>
+                    <div style={{marginRight:"2vw"}}>
                         <Link to={lectures[0].video_link}>
                             <img
                                 alt="Thumbnail"
@@ -21,6 +21,7 @@ const RecommendationLecture:React.FC<CategoryLectureProps> = ({ category }) => {
                                 style={{
                                     aspectRatio: "600/400",
                                     objectFit: "contain",
+                                
                                 }}
                                 width="600"
                             />
