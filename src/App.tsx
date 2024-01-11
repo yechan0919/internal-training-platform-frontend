@@ -8,7 +8,7 @@ import VoiceChat from "./components/VoiceChat";
 import VideoDetail from "./components/VideoDetail";
 import Quiz from "./components/Quiz";
 import MyPage from "./components/MyPage";
-
+import UserPointStats from "./components/UserPointStats";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
             <Route path={"/voice-chat"} element={<VoiceChat />}/>
             <Route path={"/quiz"} element={<Quiz />}/>
             <Route path={"/user/:userId"} element={<MyPage />}/>
+            <Route path={"/user/:userId/point"} element={<UserPointStats userId={''} />}/>
         </Routes>
     </>
   );

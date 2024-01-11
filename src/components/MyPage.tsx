@@ -7,7 +7,7 @@ const MyPage = () => {
         <section className="w-full">
             <main className="container mx-auto px-4 md:px-6 py-2">
                 <section className="mb-8">
-                    <h2 className="text-3xl font-bold mb-4">내 강의실</h2>
+                    <h2 className="text-3xl font-bold mb-10">내 강의실</h2>
                     {categories.map((category) => (
                         //TODO userId 변경
                         <UserCategoryVideoList category={category} userId={'abc'}/>

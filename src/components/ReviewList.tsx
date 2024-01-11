@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import useLectureReviewList from '../hooks/useLectureReviewList';
+import Swal from 'sweetalert2';
 
 interface LectureReviewProps {
   lectureId: number;
@@ -16,6 +17,7 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
   const [editedReviewTitle, setEditedReviewTitle] = useState<string>('');
   const [comment, setComment] = useState('');
   const [newReviewTitle, setNewReviewTitle] = useState<string>('Review Title'); // Default title for new reviews
+
 
   const handleAddReview = async () => {
     try {
@@ -34,6 +36,24 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
       });
 
       if (response.ok) {
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'center',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: false,
+          didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+      })
+      
+      Toast.fire({
+          icon: 'success',
+          title: '좋은 의견 감사합니다.'
+      })
+
         // If the review creation is successful, refresh the reviews
         setComment('');
         setNewReviewTitle('Review Title'); // Reset the title for the next review
@@ -79,8 +99,7 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
   };
 
   const handleDeleteReview = async (index: number) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this review?');
-    if (confirmDelete) {
+   
       try {
         // Call the API to delete the review
         await fetch(process.env.REACT_APP_API_URL + `/review/delete-review`, {
@@ -96,10 +115,28 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
         });
         // Refresh the reviews after deleting
         mutate();
+
+        
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'center',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: false,
+          didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+        
+        Toast.fire({
+            icon: 'success',
+            title: '정상적으로 삭제되었습니다.'
+        })
       } catch (error) {
         console.error('Error deleting review:', error);
       }
-    }
+    
   };
 
   const handleLikeReview = async (reviewId: number) => {
@@ -128,7 +165,7 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="mb-4 flex items-center">
           <textarea
-            className="w-2/3 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-2/3 p-2 border border-sky-300 rounded-md focus:outline-none focus:border-sky-400"
             placeholder="강의에 대한 의견을 들려주세요!"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -141,15 +178,15 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
             onChange={(e) => setNewReviewTitle(e.target.value)}
           /> */}
           <button
-            className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none"
+            className="ml-4 bg-sky-200 text-gray-500 border border-sky-300 font-medium px-4 py-2 rounded-md hover:bg-sky-400 focus:outline-none"
             onClick={handleAddReview}
           >
-            작성
+            등록
           </button>
         </div>
         <hr style={{marginBottom:"2vh"}}/>
         {reviews.map((review, index) => (
-          <div key={index} className="border border-gray-300 rounded-md p-4 mb-4 flex justify-between items-center">
+          <div key={index} className="border border-sky-300 rounded-md p-4 mb-4 flex justify-between items-center">
             <div>
               {editingIndex === index ? (
                 <>
@@ -200,7 +237,7 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
                     </button>
                   )} */}
                   <button
-                    className="text-blue-500 hover:underline cursor-pointer focus:outline-none"
+                    className="text-sky-300 hover:underline cursor-pointer focus:outline-none"
                     onClick={() => handleDeleteReview(index)}
                   >
                     <FontAwesomeIcon icon={faTrash} />
@@ -208,7 +245,7 @@ const RecommendationLecture: React.FC<LectureReviewProps> = ({ lectureId }) => {
                 </>
               )}
               <button
-                className="text-pink-500 hover:underline cursor-pointer focus:outline-none"
+                className="text-pink-300 hover:underline cursor-pointer focus:outline-none"
                 onClick={() => handleLikeReview(review.review_id)}
               >
                 <FontAwesomeIcon icon={faHeart} />

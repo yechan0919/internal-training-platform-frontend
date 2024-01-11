@@ -1,6 +1,6 @@
 import React from 'react';
 import useLectureByCategoryAndUser from "../hooks/useLectureByCategoryAndUser";
-import VideoList from "./VideoList";
+import VideoListForMyLecture from "./VideoListForMyLecture";
 
 interface UserCategoryVideoListProps {
     category: string;
@@ -8,9 +8,15 @@ interface UserCategoryVideoListProps {
 }
 
 const UserCategoryVideoList: React.FC<UserCategoryVideoListProps> = ({category, userId}) => {
-    const { data: lectures = [] } = useLectureByCategoryAndUser(userId, category);
+    const { data: lectures = [], mutate } = useLectureByCategoryAndUser(userId, category);
+
+    const handleDeleteLecture = (lectureId: number) => {
+
+        mutate();
+      };
+
     return (
-        <VideoList category={category} lectures={lectures}/>
+        <VideoListForMyLecture category={category} lectures={lectures} onDeleteLecture={handleDeleteLecture}/>
     );
 };
 
