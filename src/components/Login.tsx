@@ -1,7 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import {useStore} from "../store/store";
 
 interface LoginProps {}
 
@@ -9,46 +7,24 @@ function Login(props: LoginProps) {
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
-    const setAccessToken = useStore((state) => state.setAccessToken);
-
 
     async function login(event: FormEvent) {
         event.preventDefault();
         setLoading(true);
         try {
-            console.log("User ID:", userId);
-            console.log("Password:", password);
-
             const response = await axios.post("http://localhost:8088/user/login", {
                 loginId: userId,
                 password: password,
-            }, {
-                headers: {
-                    // Set the Authorization header here
-                    //Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    Authorization: `Bearer ${useStore.getState().accessToken}`,
-                },
+            }).then((res) => {
+                const accessToken = res.data.tokenDto.accessToken;
+                localStorage.setItem('accessToken', accessToken);
+                if (res.status === 200) {
+                    window.location.href = '/';
+                }
+            })
+            .catch((error) => {
+                console.log(error);
             });
-
-            console.log("Response Data:", response.data);
-            console.log("Request Config:", response.config);
-
-            // Token 값 Body에서 뜯어서 확인 완료
-            const accessToken = response.data.tokenDto.accessToken;
-            console.log("accessToken:", accessToken);
-
-            // 토큰 저장 Local
-            localStorage.setItem("accessToken", accessToken);
-            console.log("localStorage accessToken:", localStorage.getItem("accessToken"));
-
-            // 토큰 저장 Zustand
-            setAccessToken(accessToken);
-            console.log("Zustand useStore accessToken:", useStore.getState().accessToken);
-
-
-            navigate('/');
         } catch (err) {
             alert(err);
         }

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
 
 const Quiz: React.FC = () => {
     const [quizData, setQuizData] = useState<any>(null);
     const [pointData, setPointData] = useState<any>(null);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
-    // OX 버튼 클릭 
+    // OX 버튼 클릭
     const selectOX = (value: string) => {
         setSelectedValue(value);
     };
@@ -17,25 +16,25 @@ const Quiz: React.FC = () => {
         callQuizApi(topic);
     };
 
-    // 정답 확인 
+    // 정답 확인
     const checkAnswer = (selectedValue: string, topic: string) => {
         if (selectedValue === `${quizData.answer}`) {
             selectOX('정답'); // 확인용
-            //callPointApi(userId, topic); // 포인트 증가 
+            //callPointApi(userId, topic); // 포인트 증가
         }
         else {
             selectOX('오답');
         }
     };
 
-    // 포인트 증가  
+    // 포인트 증가
     // const callPointUpApi = async (userId: string, topic: string) => {
     const callPointApi = async (topic: string) => {
         try {
             // API 엔드포인트 및 IP 주소
             const baseUrl = 'http://192.168.0.104:8080';
             const apiEndpoint = '/point/add-point';
-            
+
             // 요청 데이터
             const requestData = {
                 // userId: userId,
@@ -43,14 +42,14 @@ const Quiz: React.FC = () => {
             };
 
             // REST API 호출
-            const response = await fetch(`${baseUrl}${apiEndpoint}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`, {
                 method: 'POST', // POST 요청 사용
                 headers: {
                   'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
                 },
                 body: JSON.stringify(requestData), // 데이터를 문자열로 변환하여 전송
             });
-      
+
             // 응답 확인
             if (response.ok) {
               // 성공적으로 받아온 경우
@@ -65,16 +64,21 @@ const Quiz: React.FC = () => {
           }
     };
 
-    // 퀴즈 API 호출 
+    // 퀴즈 API 호출
     const callQuizApi = async (category: string) => {
         try {
           // API 엔드포인트 및 IP 주소
-          const baseUrl = 'http://192.168.0.104:8080';
           const apiEndpoint = `/quiz/${category}/topic-random-quiz`;
-    
+
           // REST API 호출
-          const response = await fetch(`${baseUrl}${apiEndpoint}`);
-    
+          const response = await fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`,{
+              method: 'GET', // GET 요청 사용
+              headers: {
+                  'Content-Type': 'application/json',
+                  Authorization : `Bearer ${localStorage.getItem('accessToken')}`, // JWT 토큰 추가
+              }
+          });
+
           // 응답 확인
           if (response.ok) {
             // 성공적으로 받아온 경우
@@ -83,9 +87,11 @@ const Quiz: React.FC = () => {
           } else {
             // 오류가 발생한 경우
             console.error(`API 호출 중 오류 발생: ${response.status}`);
+           window.location.href = '/';
           }
         } catch (error) {
           console.error('API 호출 중 에러:', error);
+          window.location.href = '/';
         }
     };
 
@@ -96,7 +102,7 @@ const Quiz: React.FC = () => {
                     className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
                     aria-hidden="true"
                     >
-                    
+
                     <div
                         className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                         style={{
@@ -157,9 +163,9 @@ const Quiz: React.FC = () => {
                                 </p>
                             )}
                             <div>
-                                <button 
+                                <button
                                     className="w-80 h-80 rounded-md bg-gray-200 px-3.5 py-3.5 pr-8 mr-4 text-9xl font-bold text-black shadow-sm hover:bg-pink-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-400"
-                                    onClick={() => selectOX('o')} 
+                                    onClick={() => selectOX('o')}
                                     disabled={selectedValue === 'o'}>
                                 O
                                 </button>
@@ -170,7 +176,7 @@ const Quiz: React.FC = () => {
                                 </button>
                             </div>
 
-                            <button 
+                            <button
                                     className="rounded-md bg-indigo-300 px-3.5 py-3.5 mt-5 text-base font-bold text-black shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                                     onClick={() => checkAnswer(`${selectedValue}`, `${quizData.topic}`)}>
                                 정답 확인
@@ -179,7 +185,7 @@ const Quiz: React.FC = () => {
                             <div>
                                 <p>선택된 값: {selectedValue}</p>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
