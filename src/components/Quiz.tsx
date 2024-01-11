@@ -13,7 +13,7 @@ const Quiz: React.FC = () => {
 
     // 토픽 버튼 클릭
     const selectTopic = (topic: string) => {
-        selectOX('');
+        // selectOX('');
         callQuizApi(topic);
     };
 
@@ -22,9 +22,11 @@ const Quiz: React.FC = () => {
         if (selectedValue === `${quizData.answer}`) {
             selectOX('정답'); // 확인용
             //callPointApi(userId, topic); // 포인트 증가 
+            selectTopic(`${quizData.topic}`)
         }
         else {
             selectOX('오답');
+            selectTopic(`${quizData.topic}`)
         }
     };
 
@@ -159,17 +161,20 @@ const Quiz: React.FC = () => {
                             <div>
                                 {quizData && (
                                     <button 
-                                        className="w-80 h-80 rounded-md bg-gray-200 px-3.5 py-3.5 pr-8 mr-4 text-9xl font-bold text-black shadow-sm hover:bg-pink-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-400"
+                                        className={`w-80 h-80 rounded-md ${selectedValue === 'o' ? 'bg-pink-400' : 'bg-gray-200'} px-3.5 py-3.5 pr-8 mr-4 text-9xl font-bold text-black shadow-sm hover:bg-pink-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-200`}
                                         onClick={() => selectOX('o')} 
-                                        disabled={selectedValue === 'o'}>
-                                    O
+                                        disabled={selectedValue === 'o'}
+                                    >
+                                        O
                                     </button>
                                 )}
                                 {quizData && (
                                     <button
-                                        className="w-80 h-80 rounded-md bg-gray-200 px-3.5 py-3.5 text-9xl font-bold text-black shadow-sm hover:bg-pink-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-400"
-                                        onClick={() => selectOX('x')} disabled={selectedValue === 'x'}>
-                                    X
+                                        className={`w-80 h-80 rounded-md ${selectedValue === 'x' ? 'bg-pink-400' : 'bg-gray-200'} px-3.5 py-3.5 text-9xl font-bold text-black shadow-sm hover:bg-pink-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-200`}
+                                        onClick={() => selectOX('x')} 
+                                        disabled={selectedValue === 'x'}
+                                    >
+                                        X
                                     </button>
                                 )}
                             </div>
