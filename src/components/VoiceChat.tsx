@@ -81,7 +81,7 @@ const VoiceChat = () => {
 
                 <div id="messages" className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
                     <div className="chat-message flex items-end">
-                        <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                        <div className="flex flex-col space-y-2 text-base max-w-xs mx-2 order-2 items-start">
                             <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-blue-600 text-white">Hi, I am your English buddy, Poddy!</span>
                         </div>
                         <img
@@ -90,7 +90,7 @@ const VoiceChat = () => {
                     </div>
                     {chatHistory.map((chat, index) => (
                         <div key={index} className={`chat-message flex ${chat.type === 'user' ? 'items-end justify-end' : 'items-end'}`}>
-                        <div className={`flex flex-col space-y-2 text-xs max-w-xs mx-2 ${chat.type === 'user' ? 'order-1 items-end' : 'order-2 items-start'}`}>
+                        <div className={`flex flex-col space-y-2 text-base max-w-xs mx-2 ${chat.type === 'user' ? 'order-1 items-end' : 'order-2 items-start'}`}>
                             <span className={`px-4 py-2 rounded-lg inline-block ${chat.type === 'user' ? 'rounded-br-none bg-gray-300 text-gray-600' : 'rounded-bl-none bg-blue-600 text-white'}`}>{chat.message}</span>
                         </div>
                             <img
