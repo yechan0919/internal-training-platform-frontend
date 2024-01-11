@@ -3,7 +3,7 @@ import useSWR from "swr";
 import fetcher from "../libs/fetcher";
 import Lecture from "../models/Lecture";
 
-const UseLectureByCategory = (category: string) => {
+const useLectureByCategory = (category: string) => {
     const { data, error, isLoading, mutate} = useSWR<Lecture[]>(process.env.REACT_APP_API_URL + `/lecture/${category}/topic-lectures`, fetcher)
     return {
         data,
@@ -13,4 +13,4 @@ const UseLectureByCategory = (category: string) => {
     }
 };
 
-export default UseLectureByCategory;
+export default useLectureByCategory;

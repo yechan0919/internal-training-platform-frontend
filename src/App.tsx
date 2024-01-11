@@ -9,6 +9,8 @@ import VideoDetail from "./components/VideoDetail";
 import Login from "./components/Login";
 import Register from "./components/Register";
 
+import Quiz from "./components/Quiz";
+import MyPage from "./components/MyPage";
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
             <Route path={"/video"} element={<VideoMenu />}/>
             <Route path={"/video/:videoId"} element={<VideoDetail />}/>
             <Route path={"/voice-chat"} element={<VoiceChat />}/>
+            <Route path={"/quiz"} element={<Quiz />}/>
+            <Route path={"/user/:userId"} element={<MyPage />}/>
             <Route path={"/register"} element= { <Register/>} />
             <Route path={"/login"} element= { <Login/>} />
         </Routes>

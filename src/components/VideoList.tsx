@@ -1,12 +1,14 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import useLectureByCategory from "../hooks/useLectureByCategory";
+import useLectureByCategoryAndUser from "../hooks/useLectureByCategoryAndUser";
 
 interface VideoListProps {
     category: string;
+    userId?: string;
 }
 
-const VideoList:React.FC<VideoListProps> = ({category}) => {
+const VideoList:React.FC<VideoListProps> = ({category, userId}) => {
     const {data: lectures = [] } = useLectureByCategory(category)
 
     return (

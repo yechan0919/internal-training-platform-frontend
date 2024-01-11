@@ -8,6 +8,7 @@ const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Video', href: '/video' },
     { name: 'Chat', href: '/voice-chat' },
+    { name: 'Quiz', href: '/quiz' },
 ]
 
 export default function Header() {
