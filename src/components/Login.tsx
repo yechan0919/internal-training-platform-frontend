@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import {useStore} from "../store/store";
 
 interface LoginProps {}
 
@@ -8,6 +9,9 @@ function Login(props: LoginProps) {
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
+
+    const setAccessToken = useStore((state) => state.setAccessToken);
+
 
     async function login(event: FormEvent) {
         event.preventDefault();
@@ -23,16 +27,20 @@ function Login(props: LoginProps) {
             console.log("Response Data:", response.data);
             console.log("Request Config:", response.config);
 
-            const authorizationHeader = response.headers['authorization'];
-            console.log(authorizationHeader);
-            console.log("===================");
-
             const accessToken = response.data.tokenDto.accessToken;
             console.log("accessToken:", accessToken)
 
+
+            // 토큰 저장 Local
             localStorage.setItem("accessToken", accessToken);
+            console.log("localStorage accessToken:", localStorage.getItem("accessToken"));
 
 
+            // Token save Zustand
+            setAccessToken(accessToken);
+            console.log("Zustand useStore accessToken:", useStore.getState().accessToken);
+
+            navigate('/');
         } catch (err) {
             alert(err);
         }
