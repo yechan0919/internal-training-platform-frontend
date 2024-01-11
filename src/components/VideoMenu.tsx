@@ -1,66 +1,31 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 import VideoList from "./VideoList";
-import useAllLectureByLike from "../hooks/useAllLecturesByLike";
+import Carousel from "react-material-ui-carousel";
+import {categories} from "../constants/Category";
+import RecommendationLecture from "./RecommendationLecture";
 
 interface VideoMenuProps {
 }
 
-const categories = [
-    '언어',
-    '생산기술',
-    '재무',
-    '마케팅',
-    'it'
-]
-
 const VideoMenu:React.FC<VideoMenuProps> = () => {
-    const {data: lectures = []} = useAllLectureByLike()
-
     return (
-        <div className={"pt-14"}>
-            <section className="w-full ">
-                <main className="container mx-auto px-4 md:px-6 py-8">
-                    <section className="mb-8">
-                        <h2 className="text-2xl font-bold mb-4">추천 영상</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {lectures.length > 0 && (
-                                <>
-                                    <div>
-                                        <Link to={lectures[0].video_link}>
-                                            <img
-                                                alt="Thumbnail"
-                                                className="w-full h-64 object-cover object-center rounded-lg"
-                                                height="400"
-                                                src={lectures[0].thumbnail_url}
-                                                style={{
-                                                    aspectRatio: "600/400",
-                                                    objectFit: "cover",
-                                                }}
-                                                width="600"
-                                            />
-                                        </Link>
-                                    </div>
-                                    <div className="flex flex-col justify-center">
-                                        <h3 className="text-xl font-bold mb-2">{lectures[0].title}</h3>
-                                        <p className="text-zinc-500 dark:text-zinc-400">
-                                            {lectures[0].description}
-                                        </p>
-                                        <Link className="text-blue-500 hover:text-blue-700 mt-4"
-                                              to={lectures[0].video_link}>
-                                            Learn More
-                                        </Link>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </section>
-                    {categories.map((category) => (
-                        <VideoList category={category}/>
-                    ))}
-                </main>
-            </section>
-        </div>
+        <section className="w-full">
+            <main className="container mx-auto px-4 md:px-6 py-2">
+                <section className="mb-8">
+                    <h2 className="text-3xl font-bold mb-4">추천 영상</h2>
+                    <div className="grid grid-cols-1">
+                        <Carousel cycleNavigation={true} navButtonsAlwaysVisible={true}>
+                            {categories.map(category => (
+                                <RecommendationLecture category={category} />
+                            ))}
+                        </Carousel>
+                    </div>
+                </section>
+                {categories.map((category) => (
+                    <VideoList category={category}/>
+                ))}
+            </main>
+        </section>
     );
 }
 
