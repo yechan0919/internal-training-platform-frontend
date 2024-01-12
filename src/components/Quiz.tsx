@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import request from "../api/axiosAPI";
 import {useAuthStore} from "../store/auth";
+import Swal from "sweetalert2";
 
 const Quiz: React.FC = () => {
     const { user } = useAuthStore();
@@ -33,19 +34,34 @@ const Quiz: React.FC = () => {
             if(user){
                 callPointUpApi(user.userId, `${quizData.topic}`)
                 if (pointData && pointData.is_lvup === 1) {
-                    alert(`정답입니다!\n축하합니다! 레벨${pointData.user_lv === 1 ? '2로' : '3으로'} 상승하였습니다!`)
+                    Swal.fire({
+                        icon: 'success',
+                        title: '정답입니다',
+                        text: `축하합니다! 레벨${pointData.user_lv === 1 ? '2로' : '3으로'} 상승하였습니다!`,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
                 }
                 else {
-                    alert('정답입니다!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: '정답입니다',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
                 }
             }
             selectTopic(`${quizData.topic}`);
-
         }
         else {
             selectOX('오답');
             selectTopic(`${quizData.topic}`);
-            alert('틀렸습니다...');
+            Swal.fire({
+                icon: 'error',
+                title: '오답입니다',
+                showConfirmButton: false,
+                timer: 1500,
+            });
         }
     };
 
@@ -201,25 +217,7 @@ const Quiz: React.FC = () => {
                         />
                     </div>
                 </div>
-                <div style={{
-                    position: 'fixed',
-                    bottom: '2rem',
-                    right: '2rem',
-                    width: '260px',
-                    height: '230px',
-                    backgroundColor: 'white',
-                    borderRadius: '8px',
-                    padding: '1rem',
-                    color: '#666666',
-                    textAlign: 'center',
-                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.4)',
-                }}>
-                    <span className="font-bold text-lg">Level</span>
-                    <span className="block mt-3">5 포인트 미만 <span className="font-bold text-lg text-green-400 ml-3">lv.0</span> </span>
-                    <span className="block mt-3">5 포인트 이상 <span className="font-bold text-lg text-yellow-500 ml-3">lv.1</span> </span>
-                    <span className="block mt-3">10 포인트 이상 <span className="font-bold text-lg text-orange-500 ml-3">lv.2</span> </span>
-                    <span className="block mt-3">15 포인트 이상 <span className="font-bold text-lg text-red-600 ml-3">lv.3</span></span>
-            </div>
+
         </>
     );
 };

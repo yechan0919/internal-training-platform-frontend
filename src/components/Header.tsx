@@ -9,22 +9,18 @@ import {useAuthStore} from "../store/auth";
 
 const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Video', href: '/video' },
+    { name: 'Lecture', href: '/lecture' },
     { name: 'Chat', href: '/voice-chat' },
     { name: 'Quiz', href: '/quiz' },
 ]
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const { user, setUser } = useAuthStore();
+    const { user, setUser, logout } = useAuthStore();
     const ACCESS_TOKEN = localStorage.getItem('accessToken');
 
     const handleMyLecture = () => {
         window.location.href = '/my-page';
-    }
-
-    const handleLogout = async () => {
-        localStorage.clear();
     }
 
     useEffect(() => {
@@ -81,7 +77,7 @@ export default function Header() {
                                 <p className="text-sm ml-3 mr-3 font-semibold leading-6 text-gray-900 mr-2" >{user?.username} | Lv.{user?.quiz_lv}</p>
                             </div>
 
-                            <a href="/" onClick={handleLogout}
+                            <a href="/" onClick={logout}
                                className="text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-500">
                                 Log out <span aria-hidden="true">&rarr;</span>
                             </a>
@@ -132,7 +128,7 @@ export default function Header() {
                                 {ACCESS_TOKEN ?
                                     <>
                                         <p>{user?.username} {user?.quiz_lv}.Lv</p>
-                                        <a href="/" onClick={handleLogout} className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                                        <a href="/" onClick={logout} className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                                             Log out
                                         </a>
                                     </>

@@ -1,29 +1,28 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import request from "../api/axiosAPI"
+import {useAuthStore} from "../store/auth";
 
 interface LoginProps {}
 
 function Login(props: LoginProps) {
+    const { login } = useAuthStore();
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
-    async function login(event: FormEvent) {
+    async function handleLogin(event: FormEvent) {
         event.preventDefault();
         setLoading(true);
         try {
             const apiEndpoint = `/user/login`;
-
             request
                 .post(`${apiEndpoint}`,{
                     loginId: userId,
                     password: password,
                 })
                 .then((res) => {
-                    console.log(res.data)
-
                     const accessToken = res.data.tokenDto.accessToken;
-                    localStorage.setItem('accessToken', accessToken);
+                    login(accessToken)
                     if (res.status === 200) {
                         window.location.href = '/';
                     }
@@ -43,7 +42,7 @@ function Login(props: LoginProps) {
         <div className="container mx-auto mt-10">
             <div className="w-full max-w-md mx-auto">
                 <h2 className="text-3xl font-bold mb-4">Login</h2>
-                <form onSubmit={login}>
+                <form onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label htmlFor="userId" className="block text-sm font-semibold text-gray-600">User ID</label>
                         <input

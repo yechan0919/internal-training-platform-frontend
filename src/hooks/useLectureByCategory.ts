@@ -1,4 +1,3 @@
-import React from 'react';
 import useSWR from "swr";
 import fetcher from "../libs/fetcher";
 import Lecture from "../models/Lecture";

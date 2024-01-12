@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Lecture from "../models/Lecture";
 
-interface VideoListProps {
+interface LectureListProps {
   category: string,
   lectures: Lecture[]
 }
 
-const VideoList: React.FC<VideoListProps> = ({ category, lectures }) => {
+const LectureList: React.FC<LectureListProps> = ({ category, lectures }) => {
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -69,7 +69,7 @@ const VideoList: React.FC<VideoListProps> = ({ category, lectures }) => {
                       <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src={lecture.thumbnail_url}
                            alt=""/>
                       <div className="min-w-0 flex-auto">
-                        <Link to={`/video/${lecture.lectureId}`} state={lecture}>
+                        <Link to={`/lecture/${lecture.lectureId}`} state={lecture}>
                           <p className="text-sm font-semibold leading-6 text-gray-900">{lecture.title}</p>
                         </Link>
                         <p className="mt-1 truncate text-xs leading-5 text-gray-500">{lecture.description}</p>
@@ -114,4 +114,4 @@ const VideoList: React.FC<VideoListProps> = ({ category, lectures }) => {
   );
 };
 
-export default VideoList;
+export default LectureList;

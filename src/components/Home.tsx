@@ -7,7 +7,7 @@ interface TypingEffectProps {
 
   const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed }) => {
     const [displayText, setDisplayText] = useState<string>('');
-  
+
     useEffect(() => {
       let index = 0;
       const intervalId = setInterval(() => {
@@ -18,17 +18,17 @@ interface TypingEffectProps {
           clearInterval(intervalId);
         }
       }, speed);
-  
+
       return () => clearInterval(intervalId);
     }, [text, speed]);
-  
+
     return <div>{displayText}</div>;
   };
 
 const Home = () => {
     const textToType = 'Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.';
     const typingSpeed = 120; // milliseconds per character
-    
+
     return (
         <>
             <div className="relative isolate px-6 lg:px-8">
@@ -49,7 +49,7 @@ const Home = () => {
                         <div
                             className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                             Announcing our next round of funding.{' '}
-                            <a href="/video" className="font-semibold text-indigo-600">
+                            <a href="/lecture" className="font-semibold text-indigo-600">
                                 <span className="absolute inset-0" aria-hidden="true"/>
                                 Read more <span aria-hidden="true">&rarr;</span>
                             </a>
@@ -64,7 +64,7 @@ const Home = () => {
                         </p>
                         <div className="mt-10 flex items-center justify-center gap-x-6">
                             <a
-                                href="/video"
+                                href="/lecture"
                                 className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 Get started

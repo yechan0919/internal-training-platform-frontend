@@ -2,12 +2,10 @@ import React from 'react';
 import Carousel from "react-material-ui-carousel";
 import {categories} from "../constants/Category";
 import RecommendationLecture from "./RecommendationLecture";
-import CategoryVideoList from "./CategoryVideoList";
+import CategoryLectureList from "./CategoryLectureList";
 
-interface VideoMenuProps {
-}
 
-const VideoMenu:React.FC<VideoMenuProps> = () => {
+const LectureMenu = () => {
     return (
         <section className="w-full">
             <main className="container mx-auto px-4 md:px-6 py-2">
@@ -22,7 +20,7 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                     </div>
                 </section>
                 {categories.map((category) => (
-                    <CategoryVideoList category={category} key={category}/>
+                    <CategoryLectureList category={category} key={category}/>
                 ))}
             </main>
         </section>
@@ -30,4 +28,4 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
 }
 
 
-export default VideoMenu;
+export default LectureMenu;

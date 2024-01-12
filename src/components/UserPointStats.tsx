@@ -1,31 +1,38 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import Chart from 'chart.js/auto';
 import Point from '../models/Point';
+import {useAuthStore} from "../store/auth";
+import request from "../api/axiosAPI";
 
 interface RadarData {
   axis: string;
   value: number;
 }
 
-const UserPointStats: React.FC<{ userId: string }> = ({ userId }) => {
+const UserPointStats = () => {
+  const { user } = useAuthStore();
   const [userPoint, setUserPoint] = useState<Point | null>(null);
   const chartRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     // Fetch user point data when the component mounts
     const fetchUserPoint = async () => {
-      const tempId = 'abc';
       try {
-        const response = await axios.get<Point>(process.env.REACT_APP_API_URL + `/point/${tempId}/user-point`);
-        setUserPoint(response.data);
+        if(user) {
+          request.get<Point>(`/point/${user.userId}/user-point`)
+              .then((res) => {
+                if(res.status === 200){
+                  setUserPoint(res.data)
+                }
+              })
+        }
       } catch (error) {
         console.error('Error fetching user point:', error);
       }
     };
 
     fetchUserPoint();
-  }, [userId]);
+  }, [user]);
 
   useEffect(() => {
     // Update the radar chart when userPoint changes

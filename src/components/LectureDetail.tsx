@@ -10,14 +10,17 @@ import 'slick-carousel/slick/slick-theme.css';
 import Lecture from '../models/Lecture';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import request from "../api/axiosAPI";
+import {useAuthStore} from "../store/auth";
 
-const VideoDetail = () => {
+const LectureDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const lecture = location.state as Lecture;
   const lastSlashIndex = lecture.video_link.lastIndexOf('/');
   const questionMarkIndex = lecture.video_link.indexOf('?');
 
+  const { user } = useAuthStore();
   const [comment, setComment] = useState('');
   const [reviews, setReviews] = useState<string[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
@@ -25,57 +28,50 @@ const VideoDetail = () => {
 
   useEffect(() => {
     checkEnrollmentStatus();
-  }, []);
+  }, [user]);
 
   const checkEnrollmentStatus = () => {
-    const userId = 'abc'; // Replace with actual user ID
-    // Fetch user's lecture list and check if the current lecture is in the list
-    fetch(process.env.REACT_APP_API_URL + `/lecture/${userId}/user-lectures`)
-      .then((response) => response.json())
-      .then((userLectures) => {
-        const isInList = userLectures.some((userLecture: Lecture) => userLecture.lectureId === lecture.lectureId);
-        setIsEnrolled(isInList);
-      })
-      .catch((error) => console.error('Error fetching user lectures:', error));
+    if(user){
+        request.get(`/lecture/${user.userId}/user-lectures`)
+            .then((res) => {
+                if (res.status === 200) {
+                  const isInList = res.data.some((userLecture: Lecture) => userLecture.lectureId === lecture.lectureId);
+                  setIsEnrolled(isInList);
+                }
+        })
+    }
   };
 
   const handleAddToMyLectures = () => {
-    const userMyLectureRequest = {
-      userId: 'abc', // Replace with actual user ID
-      lectureId: lecture.lectureId,
-    };
+    if(user) {
+      request.post('/lecture/add-mylecture', {
+        userId: user.userId, // Replace with actual user ID
+        lectureId: lecture.lectureId,
+      }).then((res) => {
+        if (res.status === 200) {
+          Swal.fire({
+                  icon: 'success',
+                  title: '수강신청이 완료되었습니다.',
+                  text: '내 강의실에서 확인해주세요!',
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+          setIsEnrolled(true);
+        }
+      }).catch((error) => {
+            console.error('Error adding lecture to My Lectures:', error);
+          });
+    }
 
-    fetch(process.env.REACT_APP_API_URL + `/lecture/add-mylecture`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userMyLectureRequest),
-    })
-      .then((response) => {
-        Swal.fire({
-          icon: 'success',
-          title: '수강신청이 완료되었습니다.',
-          text: '내 강의실에서 확인해주세요!',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        // After successful enrollment, update the state to show the new button
-        setIsEnrolled(true);
-      })
-      .catch((error) => {
-        console.error('Error adding lecture to My Lectures:', error);
-      });
-
-    // Fetch user's lecture list and check if the current lecture is in the list
-    fetch(process.env.REACT_APP_API_URL + `/lecture/${lecture.lectureId}/recommend-lectures`)
-      .then((response) => response.json())
-      .then((recommendLectures) => {
-        setSimilarLectures(recommendLectures);
-        // Show toast with similar lectures
-        showSimilarLecturesToast(recommendLectures);
-      })
-      .catch((error) => console.error('Error fetching user lectures:', error));
+    if(user) {
+      request.get(`/lecture/${lecture.lectureId}/recommend-lectures`)
+          .then((res) => {
+        if (res.status === 200) {
+          setSimilarLectures(res.data);
+          showSimilarLecturesToast(res.data);
+        }
+      }).catch((error) => console.error('Error fetching user lectures:', error));
+    }
   };
 
   const showSimilarLecturesToast = (lectures: Lecture[]) => {
@@ -84,15 +80,13 @@ const VideoDetail = () => {
         <p className='text-2xl font-bold' style={{marginBottom:'2vh'}}>이런 강의는 어때요?</p>
         <Slider dots={true} infinite={true} speed={500} slidesToShow={3} slidesToScroll={1}>
           {lectures.map((similarLecture) => (
-            <Link to={`/video/${similarLecture.lectureId}`} state={similarLecture}>
+            <Link to={`/lecture/${similarLecture.lectureId}`} state={similarLecture} key={similarLecture.lectureId}>
             <div key={similarLecture.lectureId} className="carousel-item">
-              
                 <img className="h-50 w-50 flex-none" src={similarLecture.thumbnail_url} alt={similarLecture.title} />
                 <p className='font-semibold text-sm'>{similarLecture.title}</p>
-              
-              
+
             </div>
-            </Link>  
+            </Link>
           ))}
         </Slider>
       </div>
@@ -111,7 +105,7 @@ const VideoDetail = () => {
 
   const navigateToMyPage = () => {
     // Replace ":userId" with the actual user ID
-    navigate(`/user/:userId`);
+    navigate(`/my-page`);
   };
 
   return (
@@ -168,11 +162,9 @@ const VideoDetail = () => {
         <p className={'font-bold text-2xl'}>COMMENT</p>
       </div>
       <ReviewList lectureId={lecture.lectureId} />
-
       <ToastContainer style={{width:"100vw"}}/>
-
     </>
   );
 };
 
-export default VideoDetail;
+export default LectureDetail;

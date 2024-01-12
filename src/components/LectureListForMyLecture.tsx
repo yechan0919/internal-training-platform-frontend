@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Lecture from "../models/Lecture";
 import Swal from 'sweetalert2';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import request from "../api/axiosAPI";
+import {useAuthStore} from "../store/auth";
 
-interface VideoListForMyLectureProps {
+interface LectureListForMyLectureProps {
   category: string,
   lectures: Lecture[],
-  onDeleteLecture: (lectureId: number) => void; // Add this prop
+  mutate: any,
 }
 
-const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category, lectures, onDeleteLecture  }) => {
+const LectureListForMyLecture: React.FC<LectureListForMyLectureProps> = ({ category, lectures, mutate  }) => {
+  const { user } = useAuthStore();
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -75,31 +76,19 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        const userId = "abc"; // Replace with actual user ID
-        const userMyLectureRequest = {
-          userId: userId,
-          lectureId: lectureId,
-        };
-
-        fetch(process.env.REACT_APP_API_URL + `/lecture/delete-mylecture`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userMyLectureRequest),
-        })
-          .then(response => {
-            onDeleteLecture(lectureId);
-
-            if (response.ok) {
+        if(user){
+          request.put('/lecture/delete-mylecture', {
+            userId: user.userId,
+            lectureId: lectureId,
+          }).then( (res) => {
+            if(res.status === 200) {
               Swal.fire({
                 icon: "success",
                 title: "강의가 삭제되었습니다.",
                 showConfirmButton: false,
                 timer: 1500
               });
-              // Implement logic to refresh the list or update state if needed
-            } else {
+            }else{
               Swal.fire({
                 icon: "error",
                 title: "삭제 중 오류가 발생했습니다.",
@@ -107,8 +96,8 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
                 timer: 1500
               });
             }
-          })
-          .catch(error => {
+            mutate()
+          }).catch( (error) => {
             console.error('Error deleting lecture from My Lectures:', error);
             Swal.fire({
               icon: "error",
@@ -116,11 +105,12 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
               showConfirmButton: false,
               timer: 1500
             });
-          });
+          })
         }
+      }
       });
   };
-  
+
 
   return (
     <div className={'mb-4'}>
@@ -133,7 +123,7 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
                 <div className="flex min-w-0 gap-x-4">
                   <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src={lecture.thumbnail_url} alt="" />
                   <div className="min-w-0 flex-auto">
-                    <Link to={`/video/${lecture.lectureId}`} state={lecture}>
+                    <Link to={`/lecture/${lecture.lectureId}`} state={lecture}>
                       <p className="text-sm font-semibold leading-6 text-gray-900">{lecture.title}</p>
                     </Link>
                     <p className="mt-1 truncate text-xs leading-5 text-gray-500">{lecture.description}</p>
@@ -148,7 +138,7 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
                     onClick={() => handleDeleteLecture(lecture.lectureId)}
                     className="mt-2 text-xs font-medium text-red-600 cursor-pointer focus:outline-none"
                   >
-                   
+
                     삭제
                   </button>
                 </div>
@@ -186,4 +176,4 @@ const VideoListForMyLecture: React.FC<VideoListForMyLectureProps> = ({ category,
   );
 };
 
-export default VideoListForMyLecture;
+export default LectureListForMyLecture;

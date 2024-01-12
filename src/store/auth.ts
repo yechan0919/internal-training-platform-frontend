@@ -7,7 +7,7 @@ interface AuthStore {
     isLoggedIn: boolean;
     user: User | null;
     setUser: (user: User | null) => void;
-    login: () => void;
+    login: (accessToken: string) => void;
     logout: () => void;
 }
 
@@ -15,9 +15,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     isLoggedIn: Boolean(localStorage.getItem('username')),
     user: null,
     setUser: (user) => set({ user }),
-    login: () => set({ isLoggedIn: true }),
+    login: (accessToken: string) => {
+        localStorage.setItem('accessToken', accessToken);
+        set({ isLoggedIn: true })
+    },
     logout: () => {
-        localStorage.removeItem('username');
+        localStorage.clear();
         set({ isLoggedIn: false });
     },
 }));
