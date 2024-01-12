@@ -1,40 +1,44 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useNavigate } from 'react-router-dom';
+import request from "../api/axiosAPI"
 import axios from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 interface LoginProps {}
 
 function Login(props: LoginProps) {
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     async function login(event: FormEvent) {
         event.preventDefault();
+        setLoading(true);
         try {
-            console.log("User ID:", userId);
-            console.log("Password:", password);
+            const apiEndpoint = `/user/login`;
 
-            const response = await axios.post("http://localhost:8088/user/login", {
-                loginId: userId,
-                password: password,
-            });
+            request
+                .post(`${apiEndpoint}`,{
+                    loginId: userId,
+                    password: password,
+                })
+                .then((res) => {
+                    console.log(res.data)
 
-            console.log("Response Data:", response.data);
-            console.log("Request Config:", response.config);
-
-            const authorizationHeader = response.headers['authorization'];
-            console.log(authorizationHeader);
-            console.log("===================");
-
-            const accessToken = response.data.tokenDto.accessToken;
-            console.log("accessToken:", accessToken)
-
-            localStorage.setItem("accessToken", accessToken);
-
-
+                    const accessToken = res.data.tokenDto.accessToken;
+                    localStorage.setItem('accessToken', accessToken);
+                    if (res.status === 200) {
+                        window.location.href = '/';
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
         } catch (err) {
             alert(err);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -42,7 +46,7 @@ function Login(props: LoginProps) {
         <div className="container mx-auto mt-10">
             <div className="w-full max-w-md mx-auto">
                 <h2 className="text-3xl font-bold mb-4">Login</h2>
-                <form>
+                <form onSubmit={login}>
                     <div className="mb-4">
                         <label htmlFor="userId" className="block text-sm font-semibold text-gray-600">User ID</label>
                         <input
@@ -73,10 +77,10 @@ function Login(props: LoginProps) {
 
                     <button
                         type="submit"
-                        className="w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                        onClick={login}
+                        className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? "Logging in" : "Login"}
                     </button>
                 </form>
 

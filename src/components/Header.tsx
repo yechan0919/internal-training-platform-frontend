@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import poscoIcon from '../assets/icon/POSCO.png'
 import {NavLink} from "react-router-dom";
+import { fetchUser } from '../api/UserAPI';
+import { fetchPoint } from '../api/PointAPI';
+
+import User from "../models/User";
 
 const navigation = [
     { name: 'Home', href: '/' },
@@ -12,7 +16,35 @@ const navigation = [
 ]
 
 export default function Header() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    // TODO store에 user 저장
+    const [user, setUser] = useState<User>();
+
+    const [points, setPoints] = useState<any>(null); // State to store user points
+
+    const ACCESS_TOKEN = localStorage.getItem('accessToken');
+
+
+    const handleLogout = async () => {
+        localStorage.clear();
+    }
+
+    useEffect(() => {
+        if (ACCESS_TOKEN) {
+            fetchUser()
+                .then((response) => {
+                    // console.log(response.userId);
+                    setUser(response);
+
+                    fetchPoint(response.userId)
+                        .then((pointResponse) => {
+                            setPoints(pointResponse);
+                        })
+                }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }, [ACCESS_TOKEN]);
 
     return (
             <header className="sticky inset-x-0 top-0 z-50 bg-white">
@@ -43,16 +75,41 @@ export default function Header() {
                             }>
                                 {item.name}
                             </NavLink>
-                            // <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
-                            //
-                            // </a>
                         ))}
                     </div>
-                    <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-                            Log in <span aria-hidden="true">&rarr;</span>
-                        </a>
+
+                    <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+                        {ACCESS_TOKEN ? (
+                            <>
+                                <select
+                                    onChange={(e) => {
+                                        const selectedOption = e.target.value;
+                                        if (selectedOption === 'myLecture') {
+                                            window.location.href = '/';
+                                        }
+                                        //TODO MyPage.tsx 보내기
+
+                                    }}
+                                    className="text-sm font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500"
+                                >
+                                    <option value=""> {user?.username} | Lv.{user?.quiz_lv}</option>
+                                    <option value="myLecture">My Lecture</option>
+                                    {/* Add more options as needed */}
+                                </select>
+
+
+
+                                <a href="/" onClick={handleLogout} className="text-sm font-semibold leading-6 text-gray-900">
+                                    Log out <span aria-hidden="true">&rarr;</span>
+                                </a>
+                            </>
+                        ) : (
+                            <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
+                                Log in <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        )}
                     </div>
+
                 </nav>
                 <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
                     <div className="fixed inset-0 z-50" />
@@ -88,12 +145,26 @@ export default function Header() {
                                     ))}
                                 </div>
                                 <div className="py-6">
-                                    <a
-                                        href="#"
-                                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                                    >
-                                        Log in
-                                    </a>
+                                    {ACCESS_TOKEN
+                                    ?
+                                        <>
+                                            {user?.username} {user?.quiz_lv}.Lv
+                                            <a
+                                                href="#"
+                                                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                            >
+                                                Log out
+                                            </a>
+                                        </>
+
+                                        :
+                                        <a
+                                            href="#"
+                                            className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                        >
+                                            Log in
+                                        </a>
+                                    }
                                 </div>
                             </div>
                         </div>

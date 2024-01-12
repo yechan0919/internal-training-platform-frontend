@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
+import request from "../api/axiosAPI";
 
 const Quiz: React.FC = () => {
     const [quizData, setQuizData] = useState<any>(null);
@@ -9,7 +9,7 @@ const Quiz: React.FC = () => {
 
     console.log(JSON.stringify(pointData, null, 2));
 
-    // OX 버튼 클릭 
+    // OX 버튼 클릭
     const selectOX = (value: string) => {
         setSelectedValue(value);
     };
@@ -20,13 +20,13 @@ const Quiz: React.FC = () => {
         setSelectedTopic(topic);
     };
 
-    // 토픽 버튼 스타일 
+    // 토픽 버튼 스타일
     const buttonStyle = {
         base: 'rounded-md bg-indigo-400 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
         selected: 'rounded-md bg-indigo-900 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm',
       };
 
-    // 정답 확인 버튼 클릭 
+    // 정답 확인 버튼 클릭
     const checkAnswer = (selectedValue: string, topic: string) => {
         if (selectedValue === `${quizData.answer}`) {
             selectOX('정답'); // 확인용
@@ -46,14 +46,14 @@ const Quiz: React.FC = () => {
         }
     };
 
-    // 포인트 증가  
+    // 포인트 증가
     // const callPointApi = async (topic: string) => {
     const callPointUpApi = async (userId: string, topic: string) => {
         try {
             // API 엔드포인트 및 IP 주소
             const baseUrl = 'http://192.168.0.104:8080';
             const apiEndpoint = '/point/add-point';
-            
+
             // 요청 데이터
             const requestData = {
                 "userId": userId,
@@ -61,7 +61,7 @@ const Quiz: React.FC = () => {
             };
 
             // REST API 호출
-            const response = await fetch(`${baseUrl}${apiEndpoint}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`, {
                 method: 'PUT', // PUT 요청 사용
                 headers: {
                   'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
@@ -83,27 +83,29 @@ const Quiz: React.FC = () => {
           }
     };
 
-    // 퀴즈 API 호출 
+    // 퀴즈 API 호출
     const callQuizApi = async (category: string) => {
         try {
           // API 엔드포인트 및 IP 주소
-          const baseUrl = 'http://192.168.0.104:8080';
           const apiEndpoint = `/quiz/${category}/topic-random-quiz`;
-    
-          // REST API 호출
-          const response = await fetch(`${baseUrl}${apiEndpoint}`);
-    
-          // 응답 확인
-          if (response.ok) {
-            // 성공적으로 받아온 경우
-            const data = await response.json();
-            setQuizData(data);
-          } else {
-            // 오류가 발생한 경우
-            console.error(`API 호출 중 오류 발생: ${response.status}`);
-          }
+
+          request.get(`${apiEndpoint}`)
+              .then((res) => {
+                  if (res.status === 200) {
+                      setQuizData(res.data);
+                  } else {
+                      // 오류가 발생한 경우
+                      if (res.status === 403) {
+                          alert('접근 권한이 없습니다.');
+                      } else {
+                          console.error(`API 호출 중 오류 발생: ${res.status}`);
+                      }
+                      window.location.href = '/';
+                  }
+              })
         } catch (error) {
           console.error('API 호출 중 에러:', error);
+          // window.location.href = '/';
         }
     };
 
@@ -170,9 +172,9 @@ const Quiz: React.FC = () => {
                                 )}
                                 <div>
                                     {quizData && (
-                                        <button 
+                                        <button
                                             className={`w-80 h-80 rounded-md ${selectedValue === 'o' ? 'bg-pink-400' : 'bg-gray-200'} px-3.5 py-3.5 mr-4 text-9xl font-bold text-black shadow-sm hover:bg-pink-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-200`}
-                                            onClick={() => selectOX('o')} 
+                                            onClick={() => selectOX('o')}
                                             disabled={selectedValue === 'o'}
                                         >
                                             O
@@ -181,7 +183,7 @@ const Quiz: React.FC = () => {
                                     {quizData && (
                                         <button
                                             className={`w-80 h-80 rounded-md ${selectedValue === 'x' ? 'bg-pink-400' : 'bg-gray-200'} px-3.5 py-3.5 text-9xl font-bold text-black shadow-sm hover:bg-pink-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-200`}
-                                            onClick={() => selectOX('x')} 
+                                            onClick={() => selectOX('x')}
                                             disabled={selectedValue === 'x'}
                                         >
                                             X
@@ -190,7 +192,7 @@ const Quiz: React.FC = () => {
                                 </div>
                                 <div>
                                     {quizData && (
-                                        <button 
+                                        <button
                                             className="rounded-md bg-indigo-400 px-3.5 py-3.5 mt-5 text-base font-bold text-white hover:bg-indigo-500 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                                             onClick={() => checkAnswer(`${selectedValue}`, `${quizData.topic}`)}>
                                             정답 확인
