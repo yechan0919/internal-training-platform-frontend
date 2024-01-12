@@ -81,10 +81,6 @@ export default function Header() {
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
                         {ACCESS_TOKEN ? (
                             <>
-                                <span className="text-sm font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500">
-                                    {user?.username} | Lv.{user?.quiz_lv}
-                                </span>
-
                                 <select
                                     onChange={(e) => {
                                         const selectedOption = e.target.value;
