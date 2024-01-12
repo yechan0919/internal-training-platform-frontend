@@ -17,14 +17,9 @@ const LectureDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const lecture = location.state as Lecture;
-  const lastSlashIndex = lecture.video_link.lastIndexOf('/');
-  const questionMarkIndex = lecture.video_link.indexOf('?');
 
   const { user } = useAuthStore();
-  const [comment, setComment] = useState('');
-  const [reviews, setReviews] = useState<string[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
-  const [similarLectures, setSimilarLectures] = useState<Lecture[]>([]);
 
   useEffect(() => {
     checkEnrollmentStatus();
@@ -67,7 +62,6 @@ const LectureDetail = () => {
       request.get(`/lecture/${lecture.lectureId}/recommend-lectures`)
           .then((res) => {
         if (res.status === 200) {
-          setSimilarLectures(res.data);
           showSimilarLecturesToast(res.data);
         }
       }).catch((error) => console.error('Error fetching user lectures:', error));
@@ -114,7 +108,7 @@ const LectureDetail = () => {
         <div className="container mx-auto px-4 md:px-6 py-8 flex gap-20">
           <div className={'mb-10 w-2/3'}>
             <YouTube
-              videoId={lecture.video_link.substring(lastSlashIndex + 1, questionMarkIndex)}
+              videoId={lecture.video_link.split('v=')[1]}
               opts={{
                 width: '100%',
                 height: '400vh',
