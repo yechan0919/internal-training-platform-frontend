@@ -78,16 +78,16 @@ export default function Header() {
                                     <span className="hover:text-indigo-500"><BsPersonVideo  size={24}/></span>
                                 </div>
 
-                                <p className="text-sm ml-3 mr-3 font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500" >{user?.username} | Lv.{user?.quiz_lv}</p>
+                                <p className="text-sm ml-3 mr-3 font-semibold leading-6 text-gray-900 mr-2" >{user?.username} | Lv.{user?.quiz_lv}</p>
                             </div>
 
                             <a href="/" onClick={handleLogout}
-                               className="text-sm font-semibold leading-6 text-gray-900">
+                               className="text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-500">
                                 Log out <span aria-hidden="true">&rarr;</span>
                             </a>
                         </>
                     ) : (
-                        <a href="/login" className="text-sm font-semibold leading-6 text-gray-900">
+                        <a href="/login" className="text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-500">
                             Log in <span aria-hidden="true">&rarr;</span>
                         </a>
                     )}
