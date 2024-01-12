@@ -8,7 +8,6 @@ import VoiceChat from "./components/VoiceChat";
 import VideoDetail from "./components/VideoDetail";
 import Login from "./components/Login";
 import Register from "./components/Register";
-
 import Quiz from "./components/Quiz";
 import MyPage from "./components/MyPage";
 

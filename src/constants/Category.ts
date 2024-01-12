@@ -3,5 +3,5 @@ export const categories = [
     '생산기술',
     '재무',
     '마케팅',
-    'it'
+    'IT'
 ]
