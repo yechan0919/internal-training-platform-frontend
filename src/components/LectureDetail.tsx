@@ -74,7 +74,9 @@ const LectureDetail = () => {
         <p className='text-2xl font-bold' style={{marginBottom:'2vh'}}>이런 강의는 어때요?</p>
         <Slider dots={true} infinite={true} speed={500} slidesToShow={3} slidesToScroll={1}>
           {lectures.map((similarLecture) => (
-            <Link to={`/lecture/${similarLecture.lectureId}`} state={similarLecture} key={similarLecture.lectureId}>
+            <Link to={`/lecture/${similarLecture.lectureId}`} state={similarLecture} key={similarLecture.lectureId} onClick={() => {
+              toast.dismiss();
+            }}>
             <div key={similarLecture.lectureId} className="carousel-item">
                 <img className="h-50 w-50 flex-none" src={similarLecture.thumbnail_url} alt={similarLecture.title} />
                 <p className='font-semibold text-sm'>{similarLecture.title}</p>
