@@ -29,14 +29,14 @@ const RecommendationLecture:React.FC<CategoryLectureProps> = ({ category }) => {
                     </div>
                     <div className="flex flex-col justify-center w-1/2">
                         <h3 className="text-2xl font-bold mb-2">{category}</h3>
-                        <Link className="text-xl font-bold mb-2" to={`/video/${lectures[0].lecture_id}`} state={lectures[0]}>
+                        <Link className="text-xl font-bold mb-2" to={`/video/${lectures[0].lectureId}`} state={lectures[0]}>
                             {lectures[0].title}
                         </Link>
                         <p className="text-zinc-500 dark:text-zinc-400">
                             {lectures[0].description}
                         </p>
                         <Link className="text-blue-500 hover:text-blue-700 mt-4"
-                              to={`/video/${lectures[0].lecture_id}`} state={lectures[0]}>
+                              to={`/video/${lectures[0].lectureId}`} state={lectures[0]}>
                             Learn More
                         </Link>
                     </div>

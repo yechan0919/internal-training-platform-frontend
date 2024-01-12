@@ -1,5 +1,5 @@
 export default interface Lecture {
-    "lecture_id": number,
+    "lectureId": number,
     "topic": string,
     "title": string,
     "description": string,

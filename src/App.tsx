@@ -11,7 +11,7 @@ import Register from "./components/Register";
 
 import Quiz from "./components/Quiz";
 import MyPage from "./components/MyPage";
-
+import UserPointStats from "./components/UserPointStats";
 
 function App() {
   return (
@@ -26,6 +26,7 @@ function App() {
             <Route path={"/my-page"} element={<MyPage />}/>
             <Route path={"/register"} element= { <Register/>} />
             <Route path={"/login"} element= { <Login/>} />
+            <Route path={"/user/:userId/point"} element={<UserPointStats userId={''} />}/>
         </Routes>
     </>
   );
