@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import request from "../api/axiosAPI";
+import {useAuthStore} from "../store/auth";
 
 const Quiz: React.FC = () => {
+    const { user } = useAuthStore();
     const [quizData, setQuizData] = useState<any>(null);
     const [pointData, setPointData] = useState<any>(null);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-
-    console.log(JSON.stringify(pointData, null, 2));
 
     // OX 버튼 클릭
     const selectOX = (value: string) => {
@@ -30,14 +30,17 @@ const Quiz: React.FC = () => {
     const checkAnswer = (selectedValue: string, topic: string) => {
         if (selectedValue === `${quizData.answer}`) {
             selectOX('정답'); // 확인용
-            callPointUpApi("kny1774", `${quizData.topic}`); // 포인트 증가 ######## 로그인 구현하면 userId 수정하기 #######
+            if(user){
+                callPointUpApi(user.userId, `${quizData.topic}`)
+                if (pointData && pointData.is_lvup === 1) {
+                    alert(`정답입니다!\n축하합니다! 레벨${pointData.user_lv === 1 ? '2로' : '3으로'} 상승하였습니다!`)
+                }
+                else {
+                    alert('정답입니다!');
+                }
+            }
             selectTopic(`${quizData.topic}`);
-            if (pointData && pointData.is_lvup === 1) {
-                alert(`정답입니다!\n축하합니다! 레벨${pointData.user_lv === 1 ? '2로' : '3으로'} 상승하였습니다!`)
-            }
-            else {
-                alert('정답입니다!');
-            }
+
         }
         else {
             selectOX('오답');
@@ -47,37 +50,22 @@ const Quiz: React.FC = () => {
     };
 
     // 포인트 증가
-    // const callPointApi = async (topic: string) => {
     const callPointUpApi = async (userId: string, topic: string) => {
         try {
-            // API 엔드포인트 및 IP 주소
-            const baseUrl = 'http://192.168.0.104:8080';
-            const apiEndpoint = '/point/add-point';
-
-            // 요청 데이터
-            const requestData = {
+            request.put('/point/add-point', {
                 "userId": userId,
                 "topic": topic,
-            };
-
-            // REST API 호출
-            const response = await fetch(`${process.env.REACT_APP_API_URL}${apiEndpoint}`, {
-                method: 'PUT', // PUT 요청 사용
-                headers: {
-                  'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
-                },
-                body: JSON.stringify(requestData), // 데이터를 문자열로 변환하여 전송
-            });
-
-            // 응답 확인
-            if (response.ok) {
-              // 성공적으로 받아온 경우
-              const data = await response.json();
-              setPointData(data);
-            } else {
-              // 오류가 발생한 경우
-              console.error(`API 호출 중 오류 발생: ${response.status}`);
-            }
+            }).then((response) => {
+                // 응답 확인
+                if (response.status === 200) {
+                    // 성공적으로 받아온 경우
+                    const data = response.data;
+                    setPointData(response.data);
+                } else {
+                    // 오류가 발생한 경우
+                    console.error(`API 호출 중 오류 발생: ${response.status}`);
+                }
+            })
           } catch (error) {
             console.error('API 호출 중 에러:', error);
           }
@@ -86,10 +74,7 @@ const Quiz: React.FC = () => {
     // 퀴즈 API 호출
     const callQuizApi = async (category: string) => {
         try {
-          // API 엔드포인트 및 IP 주소
-          const apiEndpoint = `/quiz/${category}/topic-random-quiz`;
-
-          request.get(`${apiEndpoint}`)
+          request.get(`/quiz/${category}/topic-random-quiz`)
               .then((res) => {
                   if (res.status === 200) {
                       setQuizData(res.data);

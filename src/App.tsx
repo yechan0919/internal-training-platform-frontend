@@ -23,7 +23,7 @@ function App() {
             <Route path={"/video/:videoId"} element={<VideoDetail />}/>
             <Route path={"/voice-chat"} element={<VoiceChat />}/>
             <Route path={"/quiz"} element={<Quiz />}/>
-            <Route path={"/user/:userId"} element={<MyPage />}/>
+            <Route path={"/my-page"} element={<MyPage />}/>
             <Route path={"/register"} element= { <Register/>} />
             <Route path={"/login"} element= { <Login/>} />
         </Routes>

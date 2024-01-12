@@ -16,13 +16,13 @@ const VideoMenu:React.FC<VideoMenuProps> = () => {
                     <div className="grid grid-cols-1">
                         <Carousel cycleNavigation={true} navButtonsAlwaysVisible={true}>
                             {categories.map(category => (
-                                <RecommendationLecture category={category} />
+                                <RecommendationLecture category={category} key={category} />
                             ))}
                         </Carousel>
                     </div>
                 </section>
                 {categories.map((category) => (
-                    <CategoryVideoList category={category}/>
+                    <CategoryVideoList category={category} key={category}/>
                 ))}
             </main>
         </section>

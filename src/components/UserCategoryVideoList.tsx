@@ -10,7 +10,9 @@ interface UserCategoryVideoListProps {
 const UserCategoryVideoList: React.FC<UserCategoryVideoListProps> = ({category, userId}) => {
     const { data: lectures = [] } = useLectureByCategoryAndUser(userId, category);
     return (
-        <VideoList category={category} lectures={lectures}/>
+        <>
+            <VideoList category={category} lectures={lectures}/>
+        </>
     );
 };
 

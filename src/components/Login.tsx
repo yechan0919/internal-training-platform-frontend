@@ -1,8 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import request from "../api/axiosAPI"
-import axios from "axios";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 interface LoginProps {}
 
