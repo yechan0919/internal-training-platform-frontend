@@ -1,6 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+interface TypingEffectProps {
+    text: string;
+    speed: number;
+  }
+
+  const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed }) => {
+    const [displayText, setDisplayText] = useState<string>('');
+  
+    useEffect(() => {
+      let index = 0;
+      const intervalId = setInterval(() => {
+        if (index <= text.length) {
+          setDisplayText(text.slice(0, index));
+          index += 1;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, speed);
+  
+      return () => clearInterval(intervalId);
+    }, [text, speed]);
+  
+    return <div>{displayText}</div>;
+  };
 
 const Home = () => {
+    const textToType = 'Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.';
+    const typingSpeed = 200; // milliseconds per character
+    
     return (
         <>
             <div className="relative isolate px-6 lg:px-8">
@@ -28,13 +56,11 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="text-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                        <h1 className="text-4xl font-bold text-gray-900 sm:text-6xl">
                             POSCO <span className="block">Internal Training Platform</span>
                         </h1>
                         <p className="mt-6 text-lg leading-8 text-gray-600">
-                            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
-                            Elit sunt amet
-                            fugiat veniam occaecat fugiat aliqua.
+                            <TypingEffect text={textToType} speed={typingSpeed} />
                         </p>
                         <div className="mt-10 flex items-center justify-center gap-x-6">
                             <a
