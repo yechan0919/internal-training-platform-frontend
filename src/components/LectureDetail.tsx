@@ -129,7 +129,7 @@ const LectureDetail = () => {
             <p className={'text-xl text-white mb-2'}>{lecture.topic}</p>
             <p className="text-3xl font-bold mb-4 text-white">{lecture.title}</p>
             <p className={'text-white '}>{lecture.description}</p>
-            <p className={'text-white '}>{lecture.published_date.toLocaleString()}</p>
+            <p className={'text-white mt-3'}>Published at: {new Date(lecture.published_date).toISOString().split('T')[0]}</p>
             <div className={'text-white flex space-x-2 items-center'} style={{ marginTop: '6vh' }}>
               <GrChannel />
               <p className={' '}>{lecture.channel_name}</p>
