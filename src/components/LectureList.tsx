@@ -78,7 +78,7 @@ const LectureList: React.FC<LectureListProps> = ({ category, lectures }) => {
                     <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
                       <p className="text-sm leading-6 text-gray-900">{lecture.channel_name}</p>
                       <p className="mt-1 text-xs leading-5 text-gray-500">
-                        Published At: {new Date(lecture.published_date).toISOString().split('T')[0]}
+                        Published at: {new Date(lecture.published_date).toISOString().split('T')[0]}
                       </p>
                     </div>
                   </li>
