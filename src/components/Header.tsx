@@ -73,12 +73,12 @@ export default function Header() {
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
                     {ACCESS_TOKEN ? (
                         <>
-                            <div className={"pr-2 flex gap-2 items-end "}>
+                            <div className={"pr-2 flex gap-2 items-end"}>
                                 <div className={"cursor-pointer"} onClick={handleMyLecture} >
-                                    <BsPersonVideo  size={24} />
+                                    <span className="hover:text-indigo-500"><BsPersonVideo  size={24}/></span>
                                 </div>
 
-                                <p className="text-sm font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500" >{user?.username} | Lv.{user?.quiz_lv}</p>
+                                <p className="text-sm ml-3 mr-3 font-semibold leading-6 text-gray-900 mr-2 cursor-pointer hover:text-indigo-500" >{user?.username} | Lv.{user?.quiz_lv}</p>
                             </div>
 
                             <a href="/" onClick={handleLogout}
